@@ -31,7 +31,7 @@ data OldCleave = OldCleave { radius :: Float }
 --      pi * radius²
 class Cleave a where
     cleaveArea :: a -> Float
-    -- Angle of the cleave between start and a side in radians
+    -- Angle of one side relative to a line perpendicular to the radii
     cleaveAngle :: a -> Either String Float
 
 instance Cleave NewCleave where
