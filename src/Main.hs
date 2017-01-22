@@ -12,6 +12,23 @@ data NewCleave = NewCleave { start :: Float
 data OldCleave = OldCleave { radius :: Float }
     deriving (Show, Eq)
 
+-- New cleave area is described using the cleave radius, as shown below:
+--      End Radius
+--     ┝━━━┥
+-- ╲───┬───╱ ┬
+--  ╲  │  ╱  │ Distance
+--   ╲─┴─╱   ┴
+--     ├─┤
+--      Start Radius
+--
+-- The formula for getting the new radius would therefore be
+--      ((start radius * 2 + end radius * 2) / 2) * distance
+-- which simplifies to
+--      (start radius + end radius) * distance
+-- 
+-- The old cleave was simply a circle tangential to the target, so it just
+-- uses
+--      pi * radius²
 class Cleave a where
     cleaveArea :: a -> Float
     -- Angle of the cleave between start and a side in radians
@@ -25,6 +42,8 @@ instance Cleave OldCleave where
     cleaveArea x = ((radius x) ^ 2) * pi
     cleaveAngle _ = Left "It's a circle."
 
+-- Cleave generally starts at 150, so just make an easy default that actually
+-- doesn't cleave at all
 standardCleave :: NewCleave
 standardCleave = NewCleave {start = 150, end = 150, distance = 0}
 
@@ -48,21 +67,6 @@ sven = (standardCleave {end=300, distance=550}, Just (OldCleave {radius=300}))
 tiny :: (NewCleave, Maybe OldCleave)
 tiny = (standardCleave {end=400, distance=600}, Just (OldCleave {radius=400}))
 
--- New cleave area is described using the cleave radius, as shown below:
---      End Radius
---     ┝━━━┥
--- ╲───┬───╱ ┬
---  ╲  │  ╱  │ Distance
---   ╲─┴─╱   ┴
---     ├─┤
---      Start Radius
---
--- The formula for getting the new radius would therefore be
---      (start radius + end radius) * distance
--- 
--- The old cleave was simply a circle tangential to the target, so it just
--- uses
---      pi * radius²
 cleave :: (NewCleave, Maybe OldCleave) -> (Float, Maybe Float, Maybe Float)
 cleave (new, old) = (newArea, originalArea, ratio)
     where newArea = cleaveArea new
