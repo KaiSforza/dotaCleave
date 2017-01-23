@@ -20,5 +20,14 @@ executable dotaCleave
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >=4.9 && <4.10
+                     , dotaCleave
   hs-source-dirs:      src
+  default-language:    Haskell2010
+
+library
+  exposed-modules:     Dota.Interactions.Cleave
+                     , Dota.Interactions.Cleave.Types
+                     , Dota.Interactions.Cleave.Values
+  build-depends:       base >= 4.9 &&  <4.10
+  hs-source-dirs:      lib
   default-language:    Haskell2010
