@@ -41,7 +41,7 @@ instance Cleave TrapezoidCleave where
     cleaveArea x = (start x + end x) * distance x
     cleaveVolume x = Right $ (distance x * pi * ((start x) ^ 2 + (end x * start x) + (end x) ^ 2)) / 3
     cleaveAngle x = Right $ atan ((end x - start x) / distance x)
-    cleaveLength x = sqrt $ (end x - start x) ^ 2 + (distance x) ^ 2
+    cleaveLength x = sqrt $ (end x) ^ 2 + (distance x) ^ 2
 
 instance Cleave CircleCleave where
     cleaveArea x = ((radius x) ^ 2) * pi
