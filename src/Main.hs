@@ -4,12 +4,12 @@ import Data.List
 import Text.Printf
 import Control.Applicative
 
-data NewCleave = NewCleave { start :: Float
-                           , end :: Float
-                           , distance :: Float }
-                           deriving (Show, Eq)
+data TrapezoidCleave = TrapezoidCleave { start :: Float
+                                       , end :: Float
+                                       , distance :: Float }
+                                       deriving (Show, Eq)
 
-data OldCleave = OldCleave { radius :: Float }
+data CircleCleave = CircleCleave { radius :: Float }
     deriving (Show, Eq)
 
 -- New cleave area is described using the cleave radius, as shown below:
@@ -37,13 +37,13 @@ class Cleave a where
     -- Longest distance you can cleave from
     cleaveLength :: a -> Float
 
-instance Cleave NewCleave where
+instance Cleave TrapezoidCleave where
     cleaveArea x = (start x + end x) * distance x
     cleaveVolume x = Right $ (distance x * pi * ((start x) ^ 2 + (end x * start x) + (end x) ^ 2)) / 3
     cleaveAngle x = Right $ atan ((end x - start x) / distance x)
     cleaveLength x = sqrt $ (end x - start x) ^ 2 + (distance x) ^ 2
 
-instance Cleave OldCleave where
+instance Cleave CircleCleave where
     cleaveArea x = ((radius x) ^ 2) * pi
     cleaveVolume _ = Left "Pretty sure it's just a cylinder."
     cleaveAngle _ = Left "It's a circle."
@@ -51,30 +51,35 @@ instance Cleave OldCleave where
 
 -- Cleave generally starts at 150, so just make an easy default that actually
 -- doesn't cleave at all
-standardCleave :: NewCleave
-standardCleave = NewCleave {start = 150, end = 150, distance = 0}
+standardCleave :: TrapezoidCleave
+standardCleave = TrapezoidCleave {start = 150, end = 150, distance = 0}
 
 -- http://dota2.gamepedia.com/Battle_Fury
-bfury :: (NewCleave, Maybe OldCleave)
-bfury = (standardCleave {end=280, distance=520}, Just (OldCleave {radius=280}))
+bfury :: (TrapezoidCleave, Maybe CircleCleave)
+bfury = ( standardCleave {end=280, distance=520}
+        , Just (CircleCleave {radius=280}))
 
 -- http://dota2.gamepedia.com/Kunkka
-kunkka :: (NewCleave, Maybe OldCleave)
-kunkka = (standardCleave {end=600, distance=900}, Just (OldCleave {radius=600}))
+kunkka :: (TrapezoidCleave, Maybe CircleCleave)
+kunkka = ( standardCleave {end=600, distance=900}
+         , Just (CircleCleave {radius=600}))
 
 -- http://dota2.gamepedia.com/Magnus
-magnus :: (NewCleave, Maybe OldCleave)
-magnus = (standardCleave {end=240, distance=460}, Just (OldCleave {radius=240}))
+magnus :: (TrapezoidCleave, Maybe CircleCleave)
+magnus = ( standardCleave {end=240, distance=460}
+         , Just (CircleCleave {radius=240}))
 
 -- http://dota2.gamepedia.com/Sven
-sven :: (NewCleave, Maybe OldCleave)
-sven = (standardCleave {end=300, distance=550}, Just (OldCleave {radius=300}))
+sven :: (TrapezoidCleave, Maybe CircleCleave)
+sven = ( standardCleave {end=300, distance=550}
+       , Just (CircleCleave {radius=300}))
 
 -- http://dota2.gamepedia.com/Tiny
-tiny :: (NewCleave, Maybe OldCleave)
-tiny = (standardCleave {end=400, distance=600}, Just (OldCleave {radius=400}))
+tiny :: (TrapezoidCleave, Maybe CircleCleave)
+tiny = ( standardCleave {end=400, distance=600}
+       , Just (CircleCleave {radius=400}))
 
-cleave :: (NewCleave, Maybe OldCleave) -> (Float, Maybe Float, Maybe Float)
+cleave :: (TrapezoidCleave, Maybe CircleCleave) -> (Float, Maybe Float, Maybe Float)
 cleave (new, old) = (newArea, originalArea, ratio)
     where newArea = cleaveArea new
           originalArea = fmap cleaveArea old
