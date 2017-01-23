@@ -31,15 +31,18 @@ data OldCleave = OldCleave { radius :: Float }
 --      pi * radius²
 class Cleave a where
     cleaveArea :: a -> Float
+    cleaveVolume :: a -> Either String Float
     -- Angle of one side relative to a line perpendicular to the radii
     cleaveAngle :: a -> Either String Float
 
 instance Cleave NewCleave where
     cleaveArea x = (start x + end x) * distance x
+    cleaveVolume x = Right $ (distance x * pi * ((start x) ^ 2 + (end x * start x) + (end x) ^ 2)) / 3
     cleaveAngle x = Right $ atan ((end x - start x) / distance x)
 
 instance Cleave OldCleave where
     cleaveArea x = ((radius x) ^ 2) * pi
+    cleaveVolume _ = Left "Pretty sure it's just a cylinder."
     cleaveAngle _ = Left "It's a circle."
 
 -- Cleave generally starts at 150, so just make an easy default that actually
