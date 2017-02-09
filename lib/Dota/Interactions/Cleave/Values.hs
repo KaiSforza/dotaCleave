@@ -10,7 +10,8 @@ bfury = ( standardCleave {end=300, distance=570}
 
 -- http://dota2.gamepedia.com/Kunkka
 kunkka :: (TrapezoidCleave, Maybe CircleCleave)
-kunkka = ( standardCleave {end=600, distance=900}
+-- 7.00 -7.01 cleave: standardCleave {end=600, distance=900}
+kunkka = ( standardCleave {end=650, distance=1100}
          , Just (CircleCleave {radius=600}))
 
 -- http://dota2.gamepedia.com/Magnus
