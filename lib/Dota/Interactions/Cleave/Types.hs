@@ -10,7 +10,7 @@ newtype CircleCleave = CircleCleave { radius :: Float }
 
 -- New cleave area is described using the cleave radius, as shown below:
 --      End Radius
---     ┝━━━┥
+--     ├───┤
 -- ╲───┬───╱ ┬
 --  ╲  │  ╱  │ Distance
 --   ╲─┴─╱   ┴
