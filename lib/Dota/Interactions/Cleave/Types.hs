@@ -5,7 +5,7 @@ data TrapezoidCleave = TrapezoidCleave { start :: Float
                                        , distance :: Float }
                                        deriving (Show, Eq)
 
-data CircleCleave = CircleCleave { radius :: Float }
+newtype CircleCleave = CircleCleave { radius :: Float }
     deriving (Show, Eq)
 
 -- New cleave area is described using the cleave radius, as shown below:
@@ -35,15 +35,15 @@ class Cleave a where
 
 instance Cleave TrapezoidCleave where
     cleaveArea x = (start x + end x) * distance x
-    cleaveVolume x = Right $ (distance x * pi * ((start x) ^ 2 + (end x * start x) + (end x) ^ 2)) / 3
+    cleaveVolume x = Right $ (distance x * pi * (start x ^ 2 + (end x * start x) + end x ^ 2)) / 3
     cleaveAngle x = Right $ atan ((end x - start x) / distance x)
-    cleaveLength x = sqrt $ (end x) ^ 2 + (distance x) ^ 2
+    cleaveLength x = sqrt $ end x ^ 2 + distance x ^ 2
 
 instance Cleave CircleCleave where
-    cleaveArea x = ((radius x) ^ 2) * pi
+    cleaveArea x = (radius x ^ 2) * pi
     cleaveVolume _ = Left "Pretty sure it's just a cylinder."
     cleaveAngle _ = Left "It's a circle."
-    cleaveLength x = (radius x) * 2
+    cleaveLength x = radius x * 2
 
 -- Cleave generally starts at 150, so just make an easy default that actually
 -- doesn't cleave at all

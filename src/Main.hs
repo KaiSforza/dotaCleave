@@ -10,7 +10,7 @@ cleave :: (TrapezoidCleave, Maybe CircleCleave) -> (Float, Maybe Float, Maybe Fl
 cleave (new, old) = (newArea, originalArea, ratio)
     where newArea = cleaveArea new
           originalArea = fmap cleaveArea old
-          ratio = fmap ((/) newArea) originalArea
+          ratio = fmap (newArea /) originalArea
 
 -- These numbers are not rounded, just truncated.
 formatReddit :: (PrintfArg t, Floating t) => String -> (t, Maybe t, Maybe t) -> String
