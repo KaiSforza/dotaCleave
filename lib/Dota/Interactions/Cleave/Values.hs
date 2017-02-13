@@ -3,13 +3,15 @@ module Dota.Interactions.Cleave.Values where
 import Dota.Interactions.Cleave.Types
 
 -- http://dota2.gamepedia.com/Battle_Fury
+-- 7.00-7.01 bfury: standardCleave {end=280, distance=520}
 bfury :: (TrapezoidCleave, Maybe CircleCleave)
-bfury = ( standardCleave {end=280, distance=520}
+bfury = ( standardCleave {end=300, distance=570}
         , Just CircleCleave {radius=280})
 
 -- http://dota2.gamepedia.com/Kunkka
 kunkka :: (TrapezoidCleave, Maybe CircleCleave)
-kunkka = ( standardCleave {end=600, distance=900}
+-- 7.00 -7.01 cleave: standardCleave {end=600, distance=900}
+kunkka = ( standardCleave {end=650, distance=1100}
          , Just CircleCleave {radius=600})
 
 -- http://dota2.gamepedia.com/Magnus
