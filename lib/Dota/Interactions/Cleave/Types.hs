@@ -5,6 +5,10 @@ data TrapezoidCleave = TrapezoidCleave { start :: Float
                                        , distance :: Float }
                                        deriving (Show, Eq)
 
+data TinyCleave = TinyCleave { width :: Float
+                             , distance' :: Float }
+                             deriving (Show, Eq)
+
 newtype CircleCleave = CircleCleave { radius :: Float }
     deriving (Show, Eq)
 
@@ -44,6 +48,12 @@ instance Cleave CircleCleave where
     cleaveVolume _ = Left "Pretty sure it's just a cylinder."
     cleaveAngle _ = Left "It's a circle."
     cleaveLength x = radius x * 2
+instance Cleave TinyCleave where
+    cleaveArea x = (distance' x * (width x * 2)) + (width x * pi)
+    cleaveVolume _ = Left "Going to just say this is flat. It's probably not"
+    cleaveAngle _ = Right $ pi / 2  -- It's a rectangle
+    cleaveLength x = (distance' x + width x)
+
 
 -- Cleave generally starts at 150, so just make an easy default that actually
 -- doesn't cleave at all

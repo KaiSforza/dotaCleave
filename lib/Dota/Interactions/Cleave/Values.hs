@@ -32,11 +32,19 @@ magnus = ( standardCleave {end=240, distance=460}
 
 -- http://dota2.gamepedia.com/Sven
 sven :: (TrapezoidCleave, CircleCleave)
-sven = ( standardCleave {end=300, distance=550}
+sven = ( svenTrap'
        , CircleCleave {radius=300})
 
+-- 7.05 sven 
+svenTrap' :: TrapezoidCleave
+svenTrap' = standardCleave {end=300, distance=570}
+
+-- 7.00 sven
+svenTrap :: TrapezoidCleave
+svenTrap = standardCleave {end=300, distance=550}
+
 -- http://dota2.gamepedia.com/Tiny
-tiny :: (TrapezoidCleave, CircleCleave)
-tiny = ( standardCleave {end=400, distance=600}
+tiny :: (TinyCleave, CircleCleave)
+tiny = ( TinyCleave {width=200, distance'=400}
        , CircleCleave {radius=400})
 
