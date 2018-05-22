@@ -1,40 +1,46 @@
-pipeline {
-    agent { label 'haskell' }
-    stages {
-        stage('setup-ghcs') {
-            steps {
-                sh 'stack --stack-root $PWD/stack setup'
-                sh 'stack --stack-root $PWD/stack --resolver nightly setup'
-            }
+def stack(String command, String resolver = 'nightly') {
+    sh "stack --resolver ${resolver} ${command}"
+}
+
+def resolvers = ['nightly', 'lts-11.10', 'lts-9.21']
+
+def setupStepParallel = resolvers.collectEntries {
+    ["setup-${it}" : setupStep(it)]
+}
+
+def setupStep(r) {
+    return {
+        node {
+            stack("setup", "${r}")
         }
-        stage('build-stable') {
-            steps {
-                sh 'stack --stack-root $PWD/stack build'
-            }
+    }
+}
+
+def setupStepExec = resolvers.collectEntries {
+    ["exec-${it}" : execStep(it)]
+}
+
+def execStep(r) {
+    return {
+        node {
+            stack("setup", "${r}")
         }
-        stage('build-nightly') {
-            steps {
-                sh 'stack --stack-root $PWD/stack --resolver nightly build'
-            }
+    }
+}
+
+node('bootstrap') {
+    stage("checkout") {
+        checkout scm
+    }
+    stage("bootstraps") {
+        parallel setupStepParallel
+    }
+    stage("builds") {
+        for (r in resolvers) {
+            stack("build", "${r}")
         }
-        stage('runs') {
-            parallel {
-                stage('syntax') {
-                    steps {
-                        sh 'stack --stack-root $PWD/stack exec -- hlint src/ lib/'
-                    }
-                }
-                stage('run-stable') {
-                    steps {
-                        sh 'stack --stack-root $PWD/stack exec -- dotaCleave'
-                    }
-                }
-                stage('run-nightly') {
-                    steps {
-                        sh 'stack --stack-root $PWD/stack exec --resolver nightly -- dotaCleave'
-                    }
-                }
-            }
-        }
+    }
+    stage("run") {
+        parallel setupStepExec
     }
 }
