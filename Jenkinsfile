@@ -1,29 +1,39 @@
 pipeline {
     agent { label 'haskell' }
     stages {
-        stage('syntax') {
+        stage('setup-ghcs') {
             steps {
-                sh 'stack exec -- hlint --git'
+                sh 'stack setup'
+                sh 'stack --resolver nightly setup'
             }
         }
-        stage('build') {
-            steps {
-                sh 'stack build'
-            }
-        }
-        stage('run') {
-            steps {
-                sh 'stack exec -- dotaCleave'
-            }
-        }
-        stage('build-nightly') {
-            steps {
-                sh 'stack --resolver nightly build'
-            }
-        }
-        stage('run-nightly') {
-            steps {
-                sh 'stack exec --resolver nightly -- dotaCleave'
+        stage('parallel') {
+            parallel {
+                stage('syntax') {
+                    steps {
+                        sh 'stack exec -- hlint --git'
+                    }
+                }
+                stage('build') {
+                    steps {
+                        sh 'stack build'
+                    }
+                }
+                stage('run') {
+                    steps {
+                        sh 'stack exec -- dotaCleave'
+                    }
+                }
+                stage('build-nightly') {
+                    steps {
+                        sh 'stack --resolver nightly build'
+                    }
+                }
+                stage('run-nightly') {
+                    steps {
+                        sh 'stack exec --resolver nightly -- dotaCleave'
+                    }
+                }
             }
         }
     }
