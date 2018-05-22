@@ -52,7 +52,7 @@ instance Cleave TinyCleave where
     cleaveArea x = (distance' x * (width x * 2)) + (width x * pi)
     cleaveVolume _ = Left "Going to just say this is flat. It's probably not"
     cleaveAngle _ = Right $ pi / 2  -- It's a rectangle
-    cleaveLength x = (distance' x + width x)
+    cleaveLength x = distance' x + width x
 
 
 -- Cleave generally starts at 150, so just make an easy default that actually
