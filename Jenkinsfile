@@ -7,26 +7,28 @@ pipeline {
                 sh 'stack --stack-root $PWD/stack --resolver nightly setup'
             }
         }
-        stage('parallel') {
+        stage('syntax') {
+            steps {
+                sh 'stack --stack-root $PWD/stack exec -- hlint --git'
+            }
+        }
+        stage('builds') {
+            stage('build-stable') {
+                steps {
+                    sh 'stack --stack-root $PWD/stack build'
+                }
+            }
+            stage('build-nightly') {
+                steps {
+                    sh 'stack --stack-root $PWD/stack --resolver nightly build'
+                }
+            }
+        }
+        stage('runs') {
             parallel {
-                stage('syntax') {
-                    steps {
-                        sh 'stack --stack-root $PWD/stack exec -- hlint --git'
-                    }
-                }
-                stage('build') {
-                    steps {
-                        sh 'stack --stack-root $PWD/stack build'
-                    }
-                }
-                stage('run') {
+                stage('run-stable') {
                     steps {
                         sh 'stack --stack-root $PWD/stack exec -- dotaCleave'
-                    }
-                }
-                stage('build-nightly') {
-                    steps {
-                        sh 'stack --stack-root $PWD/stack --resolver nightly build'
                     }
                 }
                 stage('run-nightly') {
