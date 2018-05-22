@@ -3,35 +3,35 @@ pipeline {
     stages {
         stage('setup-ghcs') {
             steps {
-                sh 'stack setup'
-                sh 'stack --resolver nightly setup'
+                sh 'stack --stack-root $PWD/stack setup'
+                sh 'stack --stack-root $PWD/stack --resolver nightly setup'
             }
         }
         stage('parallel') {
             parallel {
                 stage('syntax') {
                     steps {
-                        sh 'stack exec -- hlint --git'
+                        sh 'stack --stack-root $PWD/stack exec -- hlint --git'
                     }
                 }
                 stage('build') {
                     steps {
-                        sh 'stack build'
+                        sh 'stack --stack-root $PWD/stack build'
                     }
                 }
                 stage('run') {
                     steps {
-                        sh 'stack exec -- dotaCleave'
+                        sh 'stack --stack-root $PWD/stack exec -- dotaCleave'
                     }
                 }
                 stage('build-nightly') {
                     steps {
-                        sh 'stack --resolver nightly build'
+                        sh 'stack --stack-root $PWD/stack --resolver nightly build'
                     }
                 }
                 stage('run-nightly') {
                     steps {
-                        sh 'stack exec --resolver nightly -- dotaCleave'
+                        sh 'stack --stack-root $PWD/stack exec --resolver nightly -- dotaCleave'
                     }
                 }
             }
