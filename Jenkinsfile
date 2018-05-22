@@ -16,5 +16,15 @@ pipeline {
                 sh 'stack exec -- dotaCleave'
             }
         }
+        stage('build-nightly') {
+            steps {
+                sh 'stack --resolver nightly build'
+            }
+        }
+        stage('run-nightly') {
+            steps {
+                sh 'stack exec --resolver nightly -- dotaCleave'
+            }
+        }
     }
 }
