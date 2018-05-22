@@ -21,6 +21,7 @@ pipeline {
             parallel {
                 stage('syntax') {
                     steps {
+                        sh 'ls -la'
                         sh 'stack --stack-root $PWD/stack exec -- hlint --git dotaCleave/'
                     }
                 }
