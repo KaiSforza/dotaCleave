@@ -21,7 +21,7 @@ pipeline {
             parallel {
                 stage('syntax') {
                     steps {
-                        sh 'stack --stack-root $PWD/stack exec -- hlint --git'
+                        sh 'stack --stack-root $PWD/stack exec -- hlint --git dotaCleave/'
                     }
                 }
                 stage('run-stable') {
