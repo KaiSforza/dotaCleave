@@ -32,6 +32,11 @@ node('bootstrap') {
     stage("checkout") {
         checkout scm
     }
+    stage("printing") {
+        echo env.BUILD_ID
+        echo env.CHANGE_ID
+        echo env
+    }
     stage("bootstraps") {
         parallel setupStepParallel
     }
