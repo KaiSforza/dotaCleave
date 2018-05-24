@@ -42,57 +42,57 @@ pipeline {
         }
         stage("setup") {
             parallel {
-                stage("setup-${resolvers[0]}") {
+                stage("setup-nightly") {
                     steps {
-                        stack("setup", "${resolvers[0]}")
+                        stack("setup", "nightly")
                     }
                 }
-                stage("setup-${resolvers[1]}") {
+                stage("setup-lts-11.10") {
                     steps {
-                        stack("setup", "${resolvers[1]}")
+                        stack("setup", "lts-11.10")
                     }
                 }
-                stage("setup-${resolvers[2]}") {
+                stage("setup-lts-9.21") {
                     steps {
-                        stack("setup", "${resolvers[2]}")
+                        stack("setup", "lts-9.21")
                     }
                 }
             }
         }
         stage("build") {
             parallel {
-                stage("build-${resolvers[0]}") {
+                stage("build-nightly") {
                     steps {
-                        stack("build", "${resolvers[0]}")
+                        stack("build", "nightly")
                     }
                 }
-                stage("build-${resolvers[1]}") {
+                stage("build-lts-11.10") {
                     steps {
-                        stack("build", "${resolvers[1]}")
+                        stack("build", "lts-11.10")
                     }
                 }
-                stage("build-${resolvers[2]}") {
+                stage("build-lts-9.21") {
                     steps {
-                        stack("build", "${resolvers[2]}")
+                        stack("build", "lts-9.21")
                     }
                 }
             }
         }
         stage("exec") {
             parallel {
-                stage("exec-${resolvers[0]}") {
+                stage("exec-nightly") {
                     steps {
-                        stack("exec", "${resolvers[0]}")
+                        stack("exec", "nightly")
                     }
                 }
-                stage("exec-${resolvers[1]}") {
+                stage("exec-lts-11.10") {
                     steps {
-                        stack("exec", "${resolvers[1]}")
+                        stack("exec", "lts-11.10")
                     }
                 }
-                stage("exec-${resolvers[2]}") {
+                stage("exec-lts-9.21") {
                     steps {
-                        stack("exec", "${resolvers[2]}")
+                        stack("exec", "lts-9.21")
                     }
                 }
             }
