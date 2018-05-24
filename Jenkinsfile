@@ -30,9 +30,7 @@ def execStep(r) {
 
 
 pipeline {
-    agent { label 'bootstrap'
-            docker { image 'fpco/stack-build' }
-        }
+    agent { docker { image 'fpco/stack-build' } }
     stages {
         stage("printing") {
             steps {
