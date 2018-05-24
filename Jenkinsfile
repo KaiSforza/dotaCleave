@@ -36,7 +36,6 @@ pipeline {
             steps {
                 echo env.BUILD_ID
                 echo env.CHANGE_ID
-                echo env
             }
         }
         stage('kitchen') {
