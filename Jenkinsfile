@@ -2,13 +2,7 @@ def stack(String command, String resolver = 'nightly') {
     sh "stack --allow-different-user --resolver ${resolver} ${command}"
 }
 
-def resolvers = ['nightly', 'lts-11.10', 'lts-9.21']
-
-def nightly = resolvers[0]
-
-def lts11 = resolvers[1]
-
-def lts9 = resolvers[2]
+def resolvers = ["nightly", "lts-11.10", "lts-9.21"]
 
 def stackExec = "exec -- dotaCleave"
 
@@ -38,7 +32,7 @@ def stackExec = "exec -- dotaCleave"
 
 
 pipeline {
-    agent { docker { image 'fpco/stack-build'
+    agent { docker { image "fpco/stack-build"
                      args "-u root"
     } }
     stages {
@@ -50,54 +44,36 @@ pipeline {
         }
         stage("setup") {
             parallel {
-                stage("setup-nightly") {
-                    steps {
-                        stack("setup", nightly)
-                    }
+                stage("setup-${resolvers[0]}") {
+                    steps { stack("setup", resolvers[0]) }
                 }
                 stage("setup-lts-11.10") {
-                    steps {
-                        stack("setup", lts11)
-                    }
+                    steps { stack("setup", resolvers[1]) }
                 }
                 stage("setup-lts-9.21") {
-                    steps {
-                        stack("setup", lts9)
-                    }
+                    steps { stack("setup", resolvers[2]) }
                 }
             }
         }
         stage("build-nightly") {
-            steps {
-                stack("build", nightly)
-            }
+            steps { stack("build", resolvers[0]) }
         }
         stage("build-lts-11.10") {
-            steps {
-                stack("build", lts11)
-            }
+            steps { stack("build", resolvers[1]) }
         }
         stage("build-lts-9.21") {
-            steps {
-                stack("build", lts9)
-            }
+            steps { stack("build", resolvers[2]) }
         }
         stage("exec") {
             parallel {
                 stage("exec-nightly") {
-                    steps {
-                        stack(stackExec, nightly)
-                    }
+                    steps { stack(stackExec, resolvers[0]) }
                 }
                 stage("exec-lts-11.10") {
-                    steps {
-                        stack(stackExec, lts11)
-                    }
+                    steps { stack(stackExec, resolvers[1]) }
                 }
                 stage("exec-lts-9.21") {
-                    steps {
-                        stack(stackExec, lts9)
-                    }
+                    steps { stack(stackExec, resolvers[2]) }
                 }
             }
         }
