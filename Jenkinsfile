@@ -11,6 +11,7 @@ def ourJobs = resolvers.collectEntries {
          , exec: "exec-${it}"
          ]
     ]
+}
 
 def stackExec = "exec -- dotaCleave"
 
