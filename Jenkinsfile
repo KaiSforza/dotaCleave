@@ -28,24 +28,35 @@ def execStep(r) {
     }
 }
 
-node('bootstrap') {
-    stage("checkout") {
-        checkout scm
-    }
-    stage("printing") {
-        echo env.BUILD_ID
-        echo env.CHANGE_ID
-        echo env
-    }
-    stage("bootstraps") {
-        parallel setupStepParallel
-    }
-    stage("builds") {
-        for (r in resolvers) {
-            stack("build", "${r}")
+
+pipeline {
+    agent { label 'bootstrap'
+            docker { image 'fpco/stack-build' }
         }
-    }
-    stage("run") {
-        parallel setupStepExec
+    stages {
+        stage("printing") {
+            steps {
+                echo env.BUILD_ID
+                echo env.CHANGE_ID
+                echo env
+            }
+        }
+        stage('kitchen') {
+            steps {
+                script {
+                    stage("bootstraps") {
+                        parallel setupStepParallel
+                    }
+                    stage("builds") {
+                        for (r in resolvers) {
+                            stack("build", "${r}")
+                        }
+                    }
+                    stage("run") {
+                        parallel setupStepExec
+                    }
+                }
+            }
+        }
     }
 }
