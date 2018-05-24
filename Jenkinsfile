@@ -4,6 +4,14 @@ def stack(String command, String resolver = 'nightly') {
 
 def resolvers = ["nightly", "lts-11.10", "lts-9.21"]
 
+def ourJobs = resolvers.collectEntries {
+    [it: [ version: it
+         , setup: "setup-${it}"
+         , build: "build-${it}"
+         , exec: "exec-${it}"
+         ]
+    ]
+
 def stackExec = "exec -- dotaCleave"
 
 // def setupStepParallel = resolvers.collectEntries {
@@ -44,14 +52,14 @@ pipeline {
         }
         stage("setup") {
             parallel {
-                stage("setup-${resolvers[0]}") {
-                    steps { stack("setup", resolvers[0]) }
+                stage(ourJobs["nightly"].setup) {
+                    steps { stack("setup", ourJobs["nightly"].version) }
                 }
-                stage("setup-lts-11.10") {
-                    steps { stack("setup", resolvers[1]) }
+                stage(ourJobs["lts-11.10"].setup) {
+                    steps { stack("setup", ourJobs["lts-11.10"].version) }
                 }
-                stage("setup-lts-9.21") {
-                    steps { stack("setup", resolvers[2]) }
+                stage(ourJobs["lts-9.21"].setup) {
+                    steps { stack("setup", ourJobs["lts-9.21"].version) }
                 }
             }
         }
