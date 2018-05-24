@@ -4,6 +4,14 @@ def stack(String command, String resolver = 'nightly') {
 
 def resolvers = ['nightly', 'lts-11.10', 'lts-9.21']
 
+def nightly = resolvers[0]
+
+def lts11 = resolvers[1]
+
+def lts9 = resolvers[2]
+
+def stackExec = "exec -- dotaCleave"
+
 // def setupStepParallel = resolvers.collectEntries {
 //     ["setup-${it}" : setupStep(it)]
 // }
@@ -44,51 +52,51 @@ pipeline {
             parallel {
                 stage("setup-nightly") {
                     steps {
-                        stack("setup", "nightly")
+                        stack("setup", nightly)
                     }
                 }
                 stage("setup-lts-11.10") {
                     steps {
-                        stack("setup", "lts-11.10")
+                        stack("setup", lts11)
                     }
                 }
                 stage("setup-lts-9.21") {
                     steps {
-                        stack("setup", "lts-9.21")
+                        stack("setup", lts9)
                     }
                 }
             }
         }
         stage("build-nightly") {
             steps {
-                stack("build", "nightly")
+                stack("build", nightly)
             }
         }
         stage("build-lts-11.10") {
             steps {
-                stack("build", "lts-11.10")
+                stack("build", lts11)
             }
         }
         stage("build-lts-9.21") {
             steps {
-                stack("build", "lts-9.21")
+                stack("build", lts9)
             }
         }
         stage("exec") {
             parallel {
                 stage("exec-nightly") {
                     steps {
-                        stack("exec", "nightly")
+                        stack(stackExec, nightly)
                     }
                 }
                 stage("exec-lts-11.10") {
                     steps {
-                        stack("exec", "lts-11.10")
+                        stack(stackExec, lts11)
                     }
                 }
                 stage("exec-lts-9.21") {
                     steps {
-                        stack("exec", "lts-9.21")
+                        stack(stackExec, lts9)
                     }
                 }
             }
