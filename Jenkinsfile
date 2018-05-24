@@ -59,21 +59,19 @@ pipeline {
                 }
             }
         }
-        stage("build") {
-            stage("build-nightly") {
-                steps {
-                    stack("build", "nightly")
-                }
+        stage("build-nightly") {
+            steps {
+                stack("build", "nightly")
             }
-            stage("build-lts-11.10") {
-                steps {
-                    stack("build", "lts-11.10")
-                }
+        }
+        stage("build-lts-11.10") {
+            steps {
+                stack("build", "lts-11.10")
             }
-            stage("build-lts-9.21") {
-                steps {
-                    stack("build", "lts-9.21")
-                }
+        }
+        stage("build-lts-9.21") {
+            steps {
+                stack("build", "lts-9.21")
             }
         }
         stage("exec") {
