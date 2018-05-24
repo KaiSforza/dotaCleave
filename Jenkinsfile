@@ -1,5 +1,5 @@
 def stack(String command, String resolver = 'nightly') {
-    sh "stack --resolver ${resolver} ${command}"
+    sh "stack --allow-different-user --resolver ${resolver} ${command}"
 }
 
 def resolvers = ['nightly', 'lts-11.10', 'lts-9.21']
@@ -30,7 +30,9 @@ def execStep(r) {
 
 
 pipeline {
-    agent { docker { image 'fpco/stack-build' } }
+    agent { docker { image 'fpco/stack-build'
+                     args "-u root"
+    } }
     stages {
         stage("printing") {
             steps {
