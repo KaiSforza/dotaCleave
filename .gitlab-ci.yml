@@ -3,19 +3,16 @@ stages:
 
 variables:
     STACK_ROOT: '$CI_PROJECT_DIR/.stack'
-    STACK_JOBS: '4'
 
-job0:
-    stage: build
-    artifacts:
-        paths:
-            - .stack-work/install/
-    script:
-        - stack --jobs $STACK_JOBS setup
-        - stack --jobs $STACK_JOBS install hlint
-        - stack --jobs $STACK_JOBS exec hlint .
-        - stack --jobs $STACK_JOBS build
-        - stack --jobs $STACK_JOBS exec dotaCleave
-    tags:
-        - haskell
-        - stack
+job1:
+  stage: build
+  image: registry.gitlab.com/kaisforza/dotacleave
+  artifacts:
+    paths:
+      - .stack-work/install/
+  script:
+    - hlint src/ lib/
+    - stack --nix build
+    - stack --nix exec dotaCleave
+  tags:
+    - shared
